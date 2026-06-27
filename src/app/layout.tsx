@@ -1,0 +1,41 @@
+import type { Metadata } from "next";
+import { Montserrat } from "next/font/google";
+import "./globals.css";
+
+// Подключаем наши глобальные компоненты
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+
+const montserrat = Montserrat({
+    subsets: ["latin", "cyrillic"],
+    weight: ["400", "500", "600", "700"],
+    variable: "--font-montserrat",
+});
+
+// Базовые SEO-настройки
+export const metadata: Metadata = {
+    title: "ТСК ПРОГРЕСС | Каталог строительных материалов",
+    description:
+        "Комплексные поставки строительных материалов от фундамента до кровли. Работаем напрямую от производителей.",
+};
+
+export default function RootLayout({
+    children,
+}: Readonly<{
+    children: React.ReactNode;
+}>) {
+    return (
+        <html lang="ru">
+            <body
+                className={`${montserrat.className} antialiased flex flex-col min-h-screen`}
+            >
+                <Header />
+
+                {/* Основной контент страницы */}
+                <div className="flex-grow">{children}</div>
+
+                <Footer />
+            </body>
+        </html>
+    );
+}
