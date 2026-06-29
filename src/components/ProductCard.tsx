@@ -1,33 +1,59 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import RequestModal from "./RequestModal";
 
 interface ProductCardProps {
     name: string;
     article: string;
+    image?: string | null;
+    price?: number;
 }
 
-export default function ProductCard({ name, article }: ProductCardProps) {
+export default function ProductCard({
+    name,
+    article,
+    image,
+    price,
+}: ProductCardProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     return (
         <>
             <div className="bg-light border border-border-main rounded-xl p-5 flex flex-col justify-between h-full transition-all hover:shadow-xl hover:border-primary/50 group">
-                <div className="mb-6">
+                {/* Блок с картинкой */}
+                <div className="w-full aspect-square relative mb-4 bg-white rounded-lg overflow-hidden flex items-center justify-center p-2 border border-gray-100">
+                    {image ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                            src={image}
+                            alt={name}
+                            className="object-contain w-full h-full group-hover:scale-105 transition-transform duration-500"
+                            loading="lazy"
+                        />
+                    ) : (
+                        <div className="text-gray-300 flex flex-col items-center">
+                            <span className="text-4xl block mb-2">📦</span>
+                            <span className="text-xs">Нет фото</span>
+                        </div>
+                    )}
+                </div>
+
+                <div className="mb-6 flex-grow">
                     <p className="text-xs text-gray-400 mb-2 font-mono">
                         Арт: {article}
                     </p>
-                    <h3 className="font-semibold text-lg text-dark leading-tight group-hover:text-primary transition-colors">
+                    <h3 className="font-semibold text-sm md:text-base text-dark leading-snug group-hover:text-primary transition-colors line-clamp-3">
                         {name}
                     </h3>
                 </div>
 
                 <button
                     onClick={() => setIsModalOpen(true)}
-                    className="w-full border-2 border-primary text-primary font-bold py-2.5 rounded-lg hover:bg-primary hover:text-light transition-all active:scale-95"
+                    className="w-full border-2 border-primary text-primary font-bold py-2.5 rounded-lg hover:bg-primary hover:text-light transition-all active:scale-95 text-sm"
                 >
-                    Цена по запросу
+                    Узнать цену
                 </button>
             </div>
 

@@ -61,14 +61,17 @@ export default function Home() {
                 <section>
                     <div className="flex items-center justify-between mb-8 border-b border-border-main pb-4">
                         <h2 className="text-2xl md:text-3xl font-bold text-dark">
-                            Каталог продукции
+                            Популярные категории
                         </h2>
-                        <span className="text-sm font-medium px-3 py-1 bg-bg-light rounded-full text-text-main">
-                            {categories.length} категорий
-                        </span>
+                        <Link
+                            href="/catalog"
+                            className="text-sm font-medium px-4 py-2 bg-bg-light hover:bg-gray-200 transition-colors rounded-full text-text-main"
+                        >
+                            Смотреть все {categories.length}
+                        </Link>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {categories.map((category) => (
+                        {categories.slice(0, 8).map((category) => (
                             <Link
                                 key={category.id}
                                 href={`/catalog/${category.slug}`}
