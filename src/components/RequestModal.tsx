@@ -140,20 +140,9 @@ export default function RequestModal({
 
                             <button
                                 type="submit"
-                                disabled={isSubmitting}
-                                className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center gap-2 text-sm mt-2 disabled:opacity-70 shadow-lg shadow-primary/10"
+                                className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-xl transition-all duration-200 active:scale-95 active:bg-primary/80 cursor-pointer"
                             >
-                                {isSubmitting ? (
-                                    <>
-                                        <Loader2
-                                            size={16}
-                                            className="animate-spin"
-                                        />
-                                        Отправка...
-                                    </>
-                                ) : (
-                                    "Отправить запрос"
-                                )}
+                                Отправить заявку
                             </button>
                         </form>
                     </>

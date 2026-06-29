@@ -110,7 +110,7 @@ export default function ContactSection() {
                             <button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className="w-full bg-primary hover:bg-primary-dark text-light font-bold py-4 rounded-xl transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
+                                className="w-full bg-primary hover:bg-primary-dark text-light font-bold py-4 rounded-xl transition-colors flex items-center justify-center gap-2 disabled:opacity-70 cursor-pointer"
                             >
                                 {isSubmitting ? (
                                     <>

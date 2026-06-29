@@ -65,7 +65,7 @@ export default function ProductCard({
 
                 <button
                     onClick={() => setIsModalOpen(true)}
-                    className="w-full border-2 border-primary text-primary font-bold py-2.5 rounded-lg hover:bg-primary hover:text-light transition-all active:scale-95 text-sm"
+                    className="w-full border-2 border-primary text-primary font-bold py-2.5 rounded-lg hover:bg-primary hover:text-light transition-all duration-200 active:scale-95 active:bg-primary/90 active:border-primary/90 active:text-white text-sm"
                 >
                     Узнать цену
                 </button>

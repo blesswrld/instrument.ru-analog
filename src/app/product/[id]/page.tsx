@@ -36,6 +36,7 @@ export async function generateMetadata({
             type: "video.other",
             images: [
                 {
+                    // Заменить реальную картинку
                     url: product.image || "/og-image.jpg",
                     width: 800,
                     height: 800,
@@ -88,12 +89,14 @@ export default async function ProductPage({ params }: PageProps) {
                 "@type": "ListItem",
                 position: 1,
                 name: "Главная",
+                // Заменить домен на реальный домен сайта
                 item: "https://instrument-analog.ru",
             },
             {
                 "@type": "ListItem",
                 position: 2,
                 name: "Каталог",
+                // Заменить домен на реальный домен сайта
                 item: "https://instrument-analog.ru/catalog",
             },
             ...(category
@@ -102,6 +105,7 @@ export default async function ProductPage({ params }: PageProps) {
                           "@type": "ListItem",
                           position: 3,
                           name: category.name,
+                          // Заменить домен на реальный домен сайта
                           item: `https://instrument-analog.ru/catalog/${category.slug}`,
                       },
                   ]
@@ -110,6 +114,7 @@ export default async function ProductPage({ params }: PageProps) {
                 "@type": "ListItem",
                 position: category ? 4 : 3,
                 name: product.name,
+                // Заменить домен на реальный домен сайта
                 item: `https://instrument-analog.ru/product/${product.id}`,
             },
         ],

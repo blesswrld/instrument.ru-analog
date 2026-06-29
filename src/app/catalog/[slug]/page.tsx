@@ -17,7 +17,6 @@ interface PageProps {
 
 const ITEMS_PER_PAGE = 24;
 
-// 1. ДИНАМИЧЕСКИЕ МЕТАТЕГИ КАТЕГОРИИ
 export async function generateMetadata({
     params,
 }: PageProps): Promise<Metadata> {
@@ -52,7 +51,6 @@ export default async function CategoryPage({
         (p) => p.categoryId === category.id,
     );
 
-    // Логика сортировки на const (без переназначения ссылки)
     if (currentSort === "price_asc") {
         categoryProducts.sort((a, b) => (a.price || 0) - (b.price || 0));
     } else if (currentSort === "price_desc") {
@@ -67,59 +65,63 @@ export default async function CategoryPage({
     const paginatedProducts = categoryProducts.slice(startIndex, endIndex);
 
     return (
-        <main className="min-h-screen p-6 sm:p-8 max-w-7xl mx-auto w-full flex flex-col">
+        <main className="min-h-screen p-4 sm:p-6 md:p-8 max-w-7xl mx-auto w-full flex flex-col">
             <Link
                 href="/catalog"
-                className="inline-flex items-center gap-2 text-sm font-medium text-text-main hover:text-primary mb-6 transition-colors group w-fit"
+                className="inline-flex items-center gap-2 text-sm font-bold text-dark bg-white border border-gray-200 rounded-xl px-4 py-3 hover:border-primary hover:text-primary mb-6 transition-all duration-200 active:scale-95 w-fit shadow-sm"
             >
                 <ArrowLeft
-                    size={16}
+                    size={18}
                     className="group-hover:-translate-x-1 transition-transform"
                 />
-                Назад в каталог
+                <span className="hidden sm:inline">Назад в каталог</span>
+                <span className="sm:hidden">Назад</span>
             </Link>
 
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 border-b border-border-main pb-4 gap-4">
+            <div className="flex flex-col mb-8 border-b border-border-main pb-6 gap-5">
                 <div>
-                    <h1 className="text-3xl font-bold text-dark mb-2">
+                    <h1 className="text-3xl md:text-4xl font-bold text-dark mb-3 break-words leading-tight">
                         {category.name}
                     </h1>
-                    <span className="text-sm font-medium px-3 py-1 bg-bg-light rounded-full text-text-main">
+                    <span className="text-sm font-medium px-4 py-1.5 bg-white border border-gray-200 shadow-sm rounded-full text-text-main inline-block">
                         {totalItems} товаров
                     </span>
                 </div>
 
-                <div className="relative inline-flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm">
-                    <ArrowDownUp size={16} className="text-gray-400" />
-                    <span className="text-gray-500 mr-2">Сортировка:</span>
-                    <div className="flex gap-3 font-medium">
+                <div className="w-full flex flex-col sm:flex-row sm:items-center gap-3 bg-white border border-gray-200 rounded-xl p-3 shadow-sm">
+                    <div className="flex items-center gap-2 text-gray-500 px-1 mb-1 sm:mb-0">
+                        <ArrowDownUp size={16} />
+                        <span className="text-sm font-medium">Сортировка:</span>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2 w-full">
                         <Link
                             href={`/catalog/${category.slug}?sort=default`}
-                            className={
+                            className={`flex-grow sm:flex-none text-center px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 active:scale-95 ${
                                 currentSort === "default"
-                                    ? "text-primary"
-                                    : "text-gray-400 hover:text-dark"
-                            }
+                                    ? "bg-primary text-white shadow-md shadow-primary/20"
+                                    : "bg-gray-50 text-gray-600 hover:bg-gray-100 hover:text-dark"
+                            }`}
                         >
                             По умолчанию
                         </Link>
                         <Link
                             href={`/catalog/${category.slug}?sort=price_asc`}
-                            className={
+                            className={`flex-grow sm:flex-none text-center px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 active:scale-95 ${
                                 currentSort === "price_asc"
-                                    ? "text-primary"
-                                    : "text-gray-400 hover:text-dark"
-                            }
+                                    ? "bg-primary text-white shadow-md shadow-primary/20"
+                                    : "bg-gray-50 text-gray-600 hover:bg-gray-100 hover:text-dark"
+                            }`}
                         >
                             Дешевле
                         </Link>
                         <Link
                             href={`/catalog/${category.slug}?sort=price_desc`}
-                            className={
+                            className={`flex-grow sm:flex-none text-center px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 active:scale-95 ${
                                 currentSort === "price_desc"
-                                    ? "text-primary"
-                                    : "text-gray-400 hover:text-dark"
-                            }
+                                    ? "bg-primary text-white shadow-md shadow-primary/20"
+                                    : "bg-gray-50 text-gray-600 hover:bg-gray-100 hover:text-dark"
+                            }`}
                         >
                             Дороже
                         </Link>
@@ -128,7 +130,7 @@ export default async function CategoryPage({
             </div>
 
             {paginatedProducts.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 flex-grow">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 flex-grow">
                     {paginatedProducts.map((product) => (
                         <ProductCard
                             key={product.id}
@@ -141,7 +143,7 @@ export default async function CategoryPage({
                     ))}
                 </div>
             ) : (
-                <div className="py-20 text-center bg-white border border-border-main rounded-2xl flex-grow">
+                <div className="py-20 text-center bg-white border border-border-main rounded-2xl flex-grow shadow-sm">
                     <p className="text-lg text-text-main">Нет товаров.</p>
                 </div>
             )}
@@ -151,12 +153,12 @@ export default async function CategoryPage({
                     {currentPage > 1 ? (
                         <Link
                             href={`/catalog/${category.slug}?page=${currentPage - 1}&sort=${currentSort}`}
-                            className="p-2.5 rounded-lg border border-border-main hover:border-primary text-dark hover:text-primary transition-colors bg-white"
+                            className="p-3 rounded-lg border border-border-main hover:border-primary text-dark hover:text-primary transition-all duration-200 active:scale-90 active:bg-gray-50 bg-white shadow-sm"
                         >
                             <ChevronLeft size={18} />
                         </Link>
                     ) : (
-                        <span className="p-2.5 rounded-lg border border-border-main text-gray-300 bg-bg-light cursor-not-allowed">
+                        <span className="p-3 rounded-lg border border-border-main text-gray-300 bg-bg-light cursor-not-allowed">
                             <ChevronLeft size={18} />
                         </span>
                     )}
@@ -172,7 +174,7 @@ export default async function CategoryPage({
                                 <Link
                                     key={pageNum}
                                     href={`/catalog/${category.slug}?page=${pageNum}&sort=${currentSort}`}
-                                    className={`px-4 py-2 text-sm font-bold rounded-lg border transition-all ${pageNum === currentPage ? "bg-primary border-primary text-light shadow-md shadow-primary/10" : "bg-white border-border-main text-dark hover:border-primary hover:text-primary"}`}
+                                    className={`px-4 py-2.5 text-sm font-bold rounded-lg border transition-all duration-200 active:scale-90 shadow-sm ${pageNum === currentPage ? "bg-primary border-primary text-light shadow-md shadow-primary/20" : "bg-white border-border-main text-dark hover:border-primary hover:text-primary active:bg-gray-50"}`}
                                 >
                                     {pageNum}
                                 </Link>
@@ -193,12 +195,12 @@ export default async function CategoryPage({
                     {currentPage < totalPages ? (
                         <Link
                             href={`/catalog/${category.slug}?page=${currentPage + 1}&sort=${currentSort}`}
-                            className="p-2.5 rounded-lg border border-border-main hover:border-primary text-dark hover:text-primary transition-colors bg-white"
+                            className="p-3 rounded-lg border border-border-main hover:border-primary text-dark hover:text-primary transition-all duration-200 active:scale-90 active:bg-gray-50 bg-white shadow-sm"
                         >
                             <ChevronRight size={18} />
                         </Link>
                     ) : (
-                        <span className="p-2.5 rounded-lg border border-border-main text-gray-300 bg-bg-light cursor-not-allowed">
+                        <span className="p-3 rounded-lg border border-border-main text-gray-300 bg-bg-light cursor-not-allowed">
                             <ChevronRight size={18} />
                         </span>
                     )}
