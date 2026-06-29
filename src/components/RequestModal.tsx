@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X, Loader2 } from "lucide-react";
 
 interface RequestModalProps {
@@ -19,16 +19,61 @@ export default function RequestModal({
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
 
+    const [errors, setErrors] = useState({ name: "", phone: "", email: "" });
+
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "";
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setErrors({ name: "", phone: "", email: "" });
+        }
+
+        return () => {
+            document.body.style.overflow = "";
+        };
+    }, [isOpen]);
+
     if (!isOpen) return null;
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setIsSubmitting(true);
 
         const formData = new FormData(e.currentTarget);
-        const name = formData.get("name");
-        const phone = formData.get("phone");
-        const email = formData.get("email");
+        const name = (formData.get("name") as string).trim();
+        const phone = (formData.get("phone") as string).trim();
+        const email = (formData.get("email") as string).trim();
+
+        const newErrors = { name: "", phone: "", email: "" };
+        let isValid = true;
+
+        const nameRegex = /^[а-яА-ЯёЁa-zA-Z\s\-]{2,40}$/;
+        if (!nameRegex.test(name)) {
+            newErrors.name =
+                "Имя должно содержать только буквы (от 2 символов)";
+            isValid = false;
+        }
+
+        const digitsOnly = phone.replace(/\D/g, "");
+        if (digitsOnly.length < 10 || digitsOnly.length > 15) {
+            newErrors.phone =
+                "Введите корректный номер телефона (не менее 10 цифр)";
+            isValid = false;
+        }
+
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (email && !emailRegex.test(email)) {
+            newErrors.email = "Введите корректный email адрес";
+            isValid = false;
+        }
+
+        if (!isValid) {
+            setErrors(newErrors);
+            return;
+        }
+
+        setIsSubmitting(true);
 
         try {
             const res = await fetch("/api/telegram", {
@@ -59,6 +104,10 @@ export default function RequestModal({
         } finally {
             setIsSubmitting(false);
         }
+    };
+
+    const clearError = (field: keyof typeof errors) => {
+        if (errors[field]) setErrors((prev) => ({ ...prev, [field]: "" }));
     };
 
     return (
@@ -99,7 +148,11 @@ export default function RequestModal({
                             </p>
                         </div>
 
-                        <form onSubmit={handleSubmit} className="space-y-4">
+                        <form
+                            onSubmit={handleSubmit}
+                            className="space-y-4"
+                            noValidate
+                        >
                             <div>
                                 <label className="block text-xs font-bold text-dark uppercase tracking-wider mb-1.5">
                                     Ваше имя *
@@ -109,8 +162,18 @@ export default function RequestModal({
                                     name="name"
                                     type="text"
                                     placeholder="Иван"
-                                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-primary focus:outline-none text-sm text-dark"
+                                    onChange={() => clearError("name")}
+                                    className={`w-full px-4 py-2.5 rounded-lg border bg-gray-50 focus:outline-none text-sm text-dark transition-colors ${
+                                        errors.name
+                                            ? "border-red-500 focus:ring-2 focus:ring-red-200"
+                                            : "border-gray-200 focus:ring-2 focus:ring-primary"
+                                    }`}
                                 />
+                                {errors.name && (
+                                    <p className="text-red-500 text-xs mt-1.5">
+                                        {errors.name}
+                                    </p>
+                                )}
                             </div>
 
                             <div>
@@ -122,8 +185,18 @@ export default function RequestModal({
                                     name="phone"
                                     type="tel"
                                     placeholder="+7 (999) 000-00-00"
-                                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-primary focus:outline-none text-sm text-dark"
+                                    onChange={() => clearError("phone")}
+                                    className={`w-full px-4 py-2.5 rounded-lg border bg-gray-50 focus:outline-none text-sm text-dark transition-colors ${
+                                        errors.phone
+                                            ? "border-red-500 focus:ring-2 focus:ring-red-200"
+                                            : "border-gray-200 focus:ring-2 focus:ring-primary"
+                                    }`}
                                 />
+                                {errors.phone && (
+                                    <p className="text-red-500 text-xs mt-1.5">
+                                        {errors.phone}
+                                    </p>
+                                )}
                             </div>
 
                             <div>
@@ -134,15 +207,36 @@ export default function RequestModal({
                                     name="email"
                                     type="email"
                                     placeholder="example@mail.ru"
-                                    className="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-gray-50 focus:ring-2 focus:ring-primary focus:outline-none text-sm text-dark"
+                                    onChange={() => clearError("email")}
+                                    className={`w-full px-4 py-2.5 rounded-lg border bg-gray-50 focus:outline-none text-sm text-dark transition-colors ${
+                                        errors.email
+                                            ? "border-red-500 focus:ring-2 focus:ring-red-200"
+                                            : "border-gray-200 focus:ring-2 focus:ring-primary"
+                                    }`}
                                 />
+                                {errors.email && (
+                                    <p className="text-red-500 text-xs mt-1.5">
+                                        {errors.email}
+                                    </p>
+                                )}
                             </div>
 
                             <button
                                 type="submit"
-                                className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-xl transition-all duration-200 active:scale-95 active:bg-primary/80 cursor-pointer"
+                                disabled={isSubmitting}
+                                className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-xl transition-all duration-200 active:scale-95 active:bg-primary/80 cursor-pointer disabled:opacity-70 flex items-center justify-center gap-2 mt-2"
                             >
-                                Отправить заявку
+                                {isSubmitting ? (
+                                    <>
+                                        <Loader2
+                                            size={16}
+                                            className="animate-spin"
+                                        />
+                                        Отправка...
+                                    </>
+                                ) : (
+                                    "Отправить заявку"
+                                )}
                             </button>
                         </form>
                     </>

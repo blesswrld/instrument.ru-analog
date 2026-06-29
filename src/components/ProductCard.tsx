@@ -57,11 +57,11 @@ export default function ProductCard({
                     </div>
                 </Link>
 
-                {price && price > 0 ? (
-                    <div className="mb-4 font-bold text-lg text-dark">
-                        {price} ₽
-                    </div>
-                ) : null}
+                <div className="mt-4 flex items-center justify-between mb-4">
+                    <span className="text-sm font-bold text-gray-400 bg-gray-50 px-3 py-1 rounded-md border border-gray-100">
+                        Цена по запросу
+                    </span>
+                </div>
 
                 <button
                     onClick={() => setIsModalOpen(true)}

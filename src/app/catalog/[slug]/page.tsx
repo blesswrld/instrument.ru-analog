@@ -2,17 +2,12 @@ import { categories, products } from "@/mockData";
 import ProductCard from "@/components/ProductCard";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import {
-    ArrowLeft,
-    ChevronLeft,
-    ChevronRight,
-    ArrowDownUp,
-} from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Metadata } from "next";
 
 interface PageProps {
     params: Promise<{ slug: string }>;
-    searchParams: Promise<{ page?: string; sort?: string }>;
+    searchParams: Promise<{ page?: string }>;
 }
 
 const ITEMS_PER_PAGE = 24;
@@ -45,17 +40,10 @@ export default async function CategoryPage({
     }
 
     const currentPage = Number(resolvedSearchParams.page) || 1;
-    const currentSort = resolvedSearchParams.sort || "default";
 
     const categoryProducts = products.filter(
         (p) => p.categoryId === category.id,
     );
-
-    if (currentSort === "price_asc") {
-        categoryProducts.sort((a, b) => (a.price || 0) - (b.price || 0));
-    } else if (currentSort === "price_desc") {
-        categoryProducts.sort((a, b) => (b.price || 0) - (a.price || 0));
-    }
 
     const totalItems = categoryProducts.length;
     const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
@@ -87,46 +75,6 @@ export default async function CategoryPage({
                         {totalItems} товаров
                     </span>
                 </div>
-
-                <div className="w-full flex flex-col sm:flex-row sm:items-center gap-3 bg-white border border-gray-200 rounded-xl p-3 shadow-sm">
-                    <div className="flex items-center gap-2 text-gray-500 px-1 mb-1 sm:mb-0">
-                        <ArrowDownUp size={16} />
-                        <span className="text-sm font-medium">Сортировка:</span>
-                    </div>
-
-                    <div className="flex flex-wrap gap-2 w-full">
-                        <Link
-                            href={`/catalog/${category.slug}?sort=default`}
-                            className={`flex-grow sm:flex-none text-center px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 active:scale-95 ${
-                                currentSort === "default"
-                                    ? "bg-primary text-white shadow-md shadow-primary/20"
-                                    : "bg-gray-50 text-gray-600 hover:bg-gray-100 hover:text-dark"
-                            }`}
-                        >
-                            По умолчанию
-                        </Link>
-                        <Link
-                            href={`/catalog/${category.slug}?sort=price_asc`}
-                            className={`flex-grow sm:flex-none text-center px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 active:scale-95 ${
-                                currentSort === "price_asc"
-                                    ? "bg-primary text-white shadow-md shadow-primary/20"
-                                    : "bg-gray-50 text-gray-600 hover:bg-gray-100 hover:text-dark"
-                            }`}
-                        >
-                            Дешевле
-                        </Link>
-                        <Link
-                            href={`/catalog/${category.slug}?sort=price_desc`}
-                            className={`flex-grow sm:flex-none text-center px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 active:scale-95 ${
-                                currentSort === "price_desc"
-                                    ? "bg-primary text-white shadow-md shadow-primary/20"
-                                    : "bg-gray-50 text-gray-600 hover:bg-gray-100 hover:text-dark"
-                            }`}
-                        >
-                            Дороже
-                        </Link>
-                    </div>
-                </div>
             </div>
 
             {paginatedProducts.length > 0 ? (
@@ -152,7 +100,7 @@ export default async function CategoryPage({
                 <div className="flex items-center justify-center gap-2 mt-12 pt-6 border-t border-border-main">
                     {currentPage > 1 ? (
                         <Link
-                            href={`/catalog/${category.slug}?page=${currentPage - 1}&sort=${currentSort}`}
+                            href={`/catalog/${category.slug}?page=${currentPage - 1}`}
                             className="p-3 rounded-lg border border-border-main hover:border-primary text-dark hover:text-primary transition-all duration-200 active:scale-90 active:bg-gray-50 bg-white shadow-sm"
                         >
                             <ChevronLeft size={18} />
@@ -173,7 +121,7 @@ export default async function CategoryPage({
                             return (
                                 <Link
                                     key={pageNum}
-                                    href={`/catalog/${category.slug}?page=${pageNum}&sort=${currentSort}`}
+                                    href={`/catalog/${category.slug}?page=${pageNum}`}
                                     className={`px-4 py-2.5 text-sm font-bold rounded-lg border transition-all duration-200 active:scale-90 shadow-sm ${pageNum === currentPage ? "bg-primary border-primary text-light shadow-md shadow-primary/20" : "bg-white border-border-main text-dark hover:border-primary hover:text-primary active:bg-gray-50"}`}
                                 >
                                     {pageNum}
@@ -194,7 +142,7 @@ export default async function CategoryPage({
 
                     {currentPage < totalPages ? (
                         <Link
-                            href={`/catalog/${category.slug}?page=${currentPage + 1}&sort=${currentSort}`}
+                            href={`/catalog/${category.slug}?page=${currentPage + 1}`}
                             className="p-3 rounded-lg border border-border-main hover:border-primary text-dark hover:text-primary transition-all duration-200 active:scale-90 active:bg-gray-50 bg-white shadow-sm"
                         >
                             <ChevronRight size={18} />
