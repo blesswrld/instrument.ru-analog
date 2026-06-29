@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
 import RequestModal from "./RequestModal";
@@ -31,14 +32,16 @@ export default function ProductCard({
                 >
                     <div className="w-full aspect-square relative mb-4 bg-white rounded-lg overflow-hidden flex items-center justify-center p-2 border border-gray-100">
                         {image ? (
-                            <img
+                            <Image
                                 src={image}
                                 alt={name}
-                                className="object-contain w-full h-full group-hover:scale-105 transition-transform duration-500"
+                                fill // Растягивает картинку по размерам контейнера
+                                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 25vw"
+                                className="object-contain w-full h-full group-hover:scale-105 transition-transform duration-500 p-2"
                                 loading="lazy"
                             />
                         ) : (
-                            <div className="text-gray-300 flex flex-col items-center">
+                            <div className="text-gray-300 flex flex-col items-center justify-center h-full">
                                 <span className="text-4xl block mb-2">📦</span>
                                 <span className="text-xs">Нет фото</span>
                             </div>

@@ -1,90 +1,153 @@
 import Link from "next/link";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { categories } from "@/mockData";
+import { Phone, Mail, MapPin } from "lucide-react";
 
 export default function Footer() {
+    // Берем первые 6 категорий (направлений), чтобы футер не был бесконечным
+    const topCategories = categories.slice(0, 6);
+
     return (
-        <footer className="bg-dark text-gray-400 py-12 border-t border-gray-800 mt-auto">
-            <div className="max-w-7xl mx-auto px-8 grid grid-cols-1 md:grid-cols-3 gap-8">
-                {/* Инфо */}
-                <div>
-                    <div className="font-bold text-xl tracking-wider text-light mb-4">
-                        ПРОГРЕСС
-                    </div>
-                    <p className="text-sm mb-6 leading-relaxed">
-                        Комплексные поставки строительных материалов и
-                        инструмента для профессионалов.
-                    </p>
-                    <div className="space-y-3">
-                        <a
-                            href="mailto:a.zhmakina@tskprogress.ru"
-                            className="flex items-center gap-3 text-sm hover:text-primary transition-colors"
-                        >
-                            <Mail size={16} />
-                            a.zhmakina@tskprogress.ru
-                        </a>
-                        <a
-                            href="tel:+78000000000"
-                            className="flex items-center gap-3 text-sm hover:text-primary transition-colors"
-                        >
-                            <Phone size={16} />8 (800) 000-00-00
-                        </a>
-                        <div className="flex items-center gap-3 text-sm">
-                            <MapPin
-                                size={16}
-                                className="text-primary shrink-0"
+        <footer className="bg-dark pt-16 pb-8 border-t border-gray-800 text-gray-300">
+            <div className="max-w-7xl mx-auto px-6 sm:px-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+                    {/* 1. О компании */}
+                    <div className="lg:col-span-1">
+                        <Link href="/" className="inline-block mb-6">
+                            <img
+                                src="/progressm-logo.png"
+                                alt="ТСК ПРОГРЕСС"
+                                className="h-12 w-auto object-contain"
                             />
-                            <span>
-                                г. Москва, ул. Примерная, д. 1, офис 100
-                            </span>
-                        </div>
+                        </Link>
+                        <p className="text-sm leading-relaxed text-gray-400">
+                            Надежный поставщик профессионального инструмента и
+                            оборудования. Работаем напрямую с производителями.
+                        </p>
                     </div>
-                </div>
 
-                {/* Навигация */}
-                <div>
-                    <h4 className="text-light font-bold mb-4">Клиентам</h4>
-                    <ul className="space-y-2 text-sm flex flex-col">
-                        <Link
-                            href="/"
-                            className="hover:text-primary transition-colors flex items-center gap-2"
-                        >
-                            Каталог товаров
-                        </Link>
-                        <Link
-                            href="/"
-                            className="hover:text-primary transition-colors flex items-center gap-2"
-                        >
-                            О компании
-                        </Link>
-                        <Link
-                            href="/"
-                            className="hover:text-primary transition-colors flex items-center gap-2"
-                        >
-                            Доставка и оплата
-                        </Link>
-                        <Link
-                            href="/"
-                            className="hover:text-primary transition-colors flex items-center gap-2"
-                        >
+                    {/* 2. Направления (Каталог) */}
+                    <div>
+                        <h3 className="text-light text-lg font-bold mb-5 tracking-wide">
+                            Направления
+                        </h3>
+                        <ul className="space-y-3">
+                            {topCategories.map((category) => (
+                                <li key={category.id}>
+                                    <Link
+                                        href={`/catalog/${category.slug}`}
+                                        className="text-sm text-gray-400 hover:text-primary transition-colors block truncate pr-4"
+                                    >
+                                        {category.name}
+                                    </Link>
+                                </li>
+                            ))}
+                            <li className="pt-2">
+                                <Link
+                                    href="/catalog"
+                                    className="text-sm font-medium text-primary hover:text-white transition-colors inline-flex items-center gap-1"
+                                >
+                                    Все направления &rarr;
+                                </Link>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* 3. Информация */}
+                    <div>
+                        <h3 className="text-light text-lg font-bold mb-5 tracking-wide">
+                            Информация
+                        </h3>
+                        <ul className="space-y-3">
+                            <li>
+                                <Link
+                                    href="/about"
+                                    className="text-sm text-gray-400 hover:text-primary transition-colors"
+                                >
+                                    О компании
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    href="/delivery"
+                                    className="text-sm text-gray-400 hover:text-primary transition-colors"
+                                >
+                                    Доставка и оплата
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    href="/warranty"
+                                    className="text-sm text-gray-400 hover:text-primary transition-colors"
+                                >
+                                    Гарантия и возврат
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    href="/privacy"
+                                    className="text-sm text-gray-400 hover:text-primary transition-colors"
+                                >
+                                    Политика конфиденциальности
+                                </Link>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* 4. Контакты */}
+                    <div>
+                        <h3 className="text-light text-lg font-bold mb-5 tracking-wide">
                             Контакты
-                        </Link>
-                    </ul>
-                </div>
-
-                {/* Реквизиты */}
-                <div>
-                    <h4 className="text-light font-bold mb-4">Реквизиты</h4>
-                    <div className="text-sm space-y-2">
-                        <p className="text-light">ООО «ТСК ПРОГРЕСС»</p>
-                        <p>ИНН: 0000000000</p>
-                        <p>КПП: 000000000</p>
-                        <p>ОГРН: 0000000000000</p>
+                        </h3>
+                        <ul className="space-y-4 text-sm text-gray-400">
+                            <li className="flex items-start gap-3">
+                                <Phone
+                                    size={18}
+                                    className="text-primary shrink-0 mt-0.5"
+                                />
+                                <div>
+                                    <a
+                                        href="tel:+78000000000"
+                                        className="block text-light font-bold hover:text-primary transition-colors text-base mb-1"
+                                    >
+                                        8 (800) 000-00-00
+                                    </a>
+                                    <span className="text-xs">
+                                        Пн-Пт: 9:00 - 18:00
+                                    </span>
+                                </div>
+                            </li>
+                            <li className="flex items-center gap-3">
+                                <Mail
+                                    size={18}
+                                    className="text-primary shrink-0"
+                                />
+                                <a
+                                    href="mailto:info@progressm.ru"
+                                    className="hover:text-primary transition-colors"
+                                >
+                                    info@progressm.ru
+                                </a>
+                            </li>
+                            <li className="flex items-start gap-3">
+                                <MapPin
+                                    size={18}
+                                    className="text-primary shrink-0 mt-0.5"
+                                />
+                                <span>
+                                    г. Москва, ул. Примерная, д. 1, офис 100
+                                </span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-            </div>
 
-            <div className="max-w-7xl mx-auto px-8 mt-12 pt-8 border-t border-gray-800 text-sm text-center">
-                © {new Date().getFullYear()} ТСК ПРОГРЕСС. Все права защищены.
+                {/* Нижняя полоса */}
+                <div className="pt-8 border-t border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
+                    <p>
+                        © {new Date().getFullYear()} ТСК ПРОГРЕСС. Все права
+                        защищены.
+                    </p>
+                </div>
             </div>
         </footer>
     );

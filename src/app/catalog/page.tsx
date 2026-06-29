@@ -1,6 +1,7 @@
-import { categories } from "@/mockData";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { Folder, Package, Wrench } from "lucide-react";
+import { categories, products } from "@/mockData";
 
 export default function CatalogPage() {
     return (
@@ -28,19 +29,38 @@ export default function CatalogPage() {
             </div>
 
             {/* Сетка всех категорий без ограничений */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {categories.map((category) => (
-                    <Link
-                        key={category.id}
-                        href={`/catalog/${category.slug}`}
-                        className="group p-8 bg-white border border-border-main rounded-2xl hover:border-primary hover:shadow-xl transition-all flex flex-col items-center justify-center text-center relative overflow-hidden h-32"
-                    >
-                        <div className="absolute top-0 left-0 w-full h-1 bg-primary transform -translate-y-full group-hover:translate-y-0 transition-transform"></div>
-                        <span className="font-bold text-dark group-hover:text-primary transition-colors text-base md:text-lg z-10 line-clamp-2">
-                            {category.name}
-                        </span>
-                    </Link>
-                ))}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+                {categories.map((category) => {
+                    const count = products.filter(
+                        (p) => p.categoryId === category.id,
+                    ).length;
+
+                    return (
+                        <Link
+                            key={category.id}
+                            href={`/catalog/${category.slug}`}
+                            className="group bg-white border border-gray-200 rounded-xl p-5 hover:border-primary/40 hover:shadow-md transition-all flex items-center gap-4 relative overflow-hidden"
+                        >
+                            {/* Боковая цветовая полоска при наведении */}
+                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300"></div>
+
+                            <div className="w-12 h-12 bg-gray-50 rounded-lg flex items-center justify-center shrink-0 group-hover:bg-primary/10 group-hover:text-primary text-gray-400 transition-colors">
+                                <Folder size={20} strokeWidth={2} />
+                            </div>
+
+                            <div className="flex flex-col">
+                                <span className="font-semibold text-dark group-hover:text-primary transition-colors text-sm md:text-base line-clamp-2">
+                                    {category.name}
+                                </span>
+                                {count > 0 && (
+                                    <span className="text-xs text-gray-400 mt-0.5">
+                                        {count} товаров
+                                    </span>
+                                )}
+                            </div>
+                        </Link>
+                    );
+                })}
             </div>
         </main>
     );

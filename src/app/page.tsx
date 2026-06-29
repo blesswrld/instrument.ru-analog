@@ -1,5 +1,13 @@
 import Link from "next/link";
-import { categories } from "@/mockData";
+import { categories, products } from "@/mockData";
+import {
+    Wrench,
+    Zap,
+    Drill,
+    Hammer,
+    WrenchIcon,
+    ArrowRight,
+} from "lucide-react";
 
 import InteractiveHero from "@/components/InteractiveHero";
 import StatsGrid from "@/components/StatsGrid";
@@ -58,31 +66,68 @@ export default function Home() {
                 <Features />
 
                 {/* Сетка каталога */}
-                <section>
+                <section className="mb-16">
                     <div className="flex items-center justify-between mb-8 border-b border-border-main pb-4">
                         <h2 className="text-2xl md:text-3xl font-bold text-dark">
                             Популярные категории
                         </h2>
                         <Link
                             href="/catalog"
-                            className="text-sm font-medium px-4 py-2 bg-bg-light hover:bg-gray-200 transition-colors rounded-full text-text-main"
+                            className="text-sm font-medium text-text-main hover:text-primary transition-colors flex items-center gap-2 group"
                         >
                             Смотреть все {categories.length}
+                            <ArrowRight
+                                size={16}
+                                className="group-hover:translate-x-1 transition-transform"
+                            />
                         </Link>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {categories.slice(0, 8).map((category) => (
-                            <Link
-                                key={category.id}
-                                href={`/catalog/${category.slug}`}
-                                className="group p-8 bg-white border border-border-main rounded-2xl hover:border-primary hover:shadow-xl transition-all flex flex-col items-center justify-center text-center relative overflow-hidden"
-                            >
-                                <div className="absolute top-0 left-0 w-full h-1 bg-primary transform -translate-y-full group-hover:translate-y-0 transition-transform"></div>
-                                <span className="font-bold text-dark group-hover:text-primary transition-colors text-lg z-10">
-                                    {category.name}
-                                </span>
-                            </Link>
-                        ))}
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                        {categories.slice(0, 8).map((category, index) => {
+                            // Считаем количество товаров в категории (опционально, можно убрать если сильно грузит)
+                            const count = products.filter(
+                                (p) => p.categoryId === category.id,
+                            ).length;
+
+                            // Разные иконки для разнообразия (просто пример логики)
+                            const icons = [
+                                Wrench,
+                                Zap,
+                                Drill,
+                                Hammer,
+                                WrenchIcon,
+                            ];
+                            const Icon = icons[index % icons.length];
+
+                            return (
+                                <Link
+                                    key={category.id}
+                                    href={`/catalog/${category.slug}`}
+                                    className="group relative bg-white border border-gray-200 rounded-2xl p-6 transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 overflow-hidden flex flex-col justify-between h-40"
+                                >
+                                    {/* Декоративный фоновый элемент */}
+                                    <div className="absolute -right-6 -top-6 w-24 h-24 bg-gray-50 rounded-full group-hover:bg-primary/5 transition-colors duration-500 z-0"></div>
+
+                                    <div className="relative z-10 flex justify-between items-start mb-4">
+                                        <div className="p-2 bg-gray-50 rounded-lg group-hover:bg-primary/10 group-hover:text-primary transition-colors text-gray-500">
+                                            <Icon size={24} strokeWidth={1.5} />
+                                        </div>
+                                        {count > 0 && (
+                                            <span className="text-xs font-medium text-gray-400 bg-white border border-gray-100 px-2 py-1 rounded-full shadow-sm">
+                                                {count}
+                                            </span>
+                                        )}
+                                    </div>
+
+                                    <div className="relative z-10">
+                                        <span className="font-bold text-dark group-hover:text-primary transition-colors text-base md:text-lg line-clamp-2 leading-tight">
+                                            {category.name}
+                                        </span>
+                                    </div>
+                                </Link>
+                            );
+                        })}
                     </div>
                 </section>
 
